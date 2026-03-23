@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en" data-mode="lite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MirrorFlow | Intelligent Communication Coaching</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-display:'Sora',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --void:#030309;--deep:#07091a;--surface:#0c0e1e;
+  --glass:rgba(12,14,30,0.65);--glass-bright:rgba(255,255,255,0.04);
+  --signal:#00d4ff;--signal-dim:rgba(0,212,255,0.3);--signal-ghost:rgba(0,212,255,0.06);
+  --signal-glow:0 0 40px rgba(0,212,255,0.2);
+  --mirror:#7df9e8;--mirror-dim:rgba(125,249,232,0.2);
+  --text:#eef0f5;--text-2:#8892a4;--text-3:#454d5e;
+  --border:rgba(200,208,224,0.08);--border-bright:rgba(0,212,255,0.25);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --max-w:1120px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--signal) var(--deep)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--deep)}::-webkit-scrollbar-thumb{background:var(--signal);border-radius:2px}
+body{font-family:var(--font-body);background:var(--void);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+/* ===== BACKGROUND ===== */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(800px 600px at 20% 10%,rgba(0,212,255,.1),transparent 50%),
+    radial-gradient(600px 500px at 80% 15%,rgba(125,249,232,.06),transparent 50%),
+    radial-gradient(700px 500px at 50% 90%,rgba(0,212,255,.05),transparent 50%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px}
+
+/* Reflection line — the mirror */
+.mirror-line{position:fixed;top:0;left:50%;width:1px;height:100vh;z-index:0;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,var(--signal-dim) 30%,var(--signal-dim) 70%,transparent);opacity:.15}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.875rem 2rem;
+  backdrop-filter:blur(16px) saturate(120%);background:rgba(3,3,9,0.6);border-bottom:1px solid var(--border)}
+.nav-left{display:flex;align-items:center;gap:1.5rem}
+.nav-back{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);font-size:.7rem;color:var(--text-3);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s}
+.nav-back:hover{color:var(--signal)}
+.nav-back svg{width:14px;height:14px}
+.nav-brand{font-family:var(--font-display);font-size:1rem;font-weight:600;letter-spacing:-.02em}
+.nav-brand span{color:var(--signal)}
+.nav-right{display:flex;gap:.5rem}
+.nav-launch{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;background:var(--signal);color:var(--void);font-family:var(--font-display);font-weight:600;font-size:.78rem;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:all .2s}
+.nav-launch:hover{transform:translateY(-1px);box-shadow:var(--signal-glow)}
+.nav-launch svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* ===== HERO ===== */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 5rem}
+.hero-content{max-width:680px}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--text-3);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:.75rem}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:32px;height:1px;background:var(--border)}
+.hero-icon{width:56px;height:56px;display:grid;place-items:center;margin:0 auto 1.5rem;border-radius:16px;border:1px solid var(--border);background:var(--glass-bright);color:var(--signal)}
+.hero-icon svg{width:28px;height:28px}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:700;line-height:1.08;letter-spacing:-.03em;margin-bottom:1.25rem}
+.hero-title .reflect{display:inline-block;background:linear-gradient(135deg,var(--signal),var(--mirror));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.05rem;color:var(--text-2);max-width:520px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.hero-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;border-radius:10px;font-family:var(--font-display);font-weight:600;font-size:.85rem;text-decoration:none;transition:all .25s;cursor:pointer;border:none}
+.hero-btn.primary{background:var(--signal);color:var(--void)}
+.hero-btn.primary:hover{transform:translateY(-2px);box-shadow:var(--signal-glow)}
+.hero-btn.ghost{background:none;border:1px solid var(--border);color:var(--text-2)}
+.hero-btn.ghost:hover{border-color:var(--signal-dim);color:var(--signal);transform:translateY(-2px)}
+.hero-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%)}
+.hero-scroll span{display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--signal),transparent);animation:scrollP 2s ease-in-out infinite}
+@keyframes scrollP{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ===== MODE TOGGLE ===== */
+.mode-section{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:0 2rem}
+.mode-bar{display:flex;align-items:center;justify-content:center;gap:0;padding:4px;border-radius:14px;border:1px solid var(--border);background:var(--glass-bright);backdrop-filter:blur(12px);width:fit-content;margin:0 auto 4rem}
+.mode-btn{position:relative;padding:.65rem 2rem;border:none;background:none;font-family:var(--font-display);font-size:.85rem;font-weight:600;color:var(--text-3);cursor:pointer;border-radius:10px;transition:all .25s;z-index:1}
+.mode-btn.active{color:var(--void)}
+.mode-slider{position:absolute;top:4px;left:4px;height:calc(100% - 8px);width:calc(50% - 4px);background:var(--signal);border-radius:10px;transition:transform .35s var(--ease-out);z-index:0}
+[data-mode="classic"] .mode-slider{transform:translateX(100%)}
+.mode-bar{position:relative}
+
+/* ===== SECTIONS ===== */
+.section{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:5rem 2rem}
+.section-eyebrow{font-family:var(--font-mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.18em;color:var(--signal);margin-bottom:.5rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+.section-sub{font-size:.9rem;color:var(--text-2);max-width:540px;line-height:1.65;margin-bottom:2.5rem}
+
+/* ===== FEATURE CARDS ===== */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.fcard{position:relative;overflow:hidden;padding:1.5rem;border:1px solid var(--border);border-radius:16px;background:var(--glass-bright);backdrop-filter:blur(8px);transition:all .3s}
+.fcard:hover{border-color:var(--border-bright);transform:translateY(-2px)}
+.fcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--signal),transparent);opacity:0;transition:opacity .3s}
+.fcard:hover::before{opacity:1}
+.fcard-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--border);background:rgba(0,212,255,.04);color:var(--signal);margin-bottom:1rem}
+.fcard-icon svg{width:18px;height:18px}
+.fcard-title{font-family:var(--font-display);font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+.fcard-text{font-size:.78rem;color:var(--text-2);line-height:1.6}
+.fcard-chip{display:inline-block;font-family:var(--font-mono);font-size:.55rem;padding:.15rem .45rem;border-radius:4px;background:rgba(0,212,255,.06);color:rgba(0,212,255,.65);border:1px solid rgba(0,212,255,.1);margin-top:.75rem}
+
+/* Mode-specific cards */
+.fcard[data-mode]{display:none}
+[data-mode="lite"] .fcard[data-mode="lite"],
+[data-mode="classic"] .fcard[data-mode="classic"],
+.fcard:not([data-mode]){display:block}
+
+/* ===== UI PREVIEW ===== */
+.preview-section{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:5rem 2rem}
+.preview-frame{position:relative;border:1px solid var(--border);border-radius:20px;background:var(--glass);backdrop-filter:blur(16px);overflow:hidden;padding:2px}
+.preview-frame::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.04),transparent,rgba(125,249,232,.03));pointer-events:none;border-radius:20px}
+.preview-bar{display:flex;align-items:center;gap:6px;padding:.6rem 1rem;border-bottom:1px solid var(--border)}
+.preview-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--border)}
+.preview-dot:first-child{background:rgba(244,63,94,.4)}
+.preview-dot:nth-child(2){background:rgba(251,191,36,.4)}
+.preview-dot:nth-child(3){background:rgba(52,211,153,.4)}
+.preview-title{margin-left:.5rem;font-family:var(--font-mono);font-size:.6rem;color:var(--text-3)}
+.preview-body{display:grid;gap:1px;padding:0;min-height:320px}
+
+/* Lite preview */
+.preview-lite{grid-template-columns:1fr 1.2fr 1fr}
+.preview-classic{grid-template-columns:1fr 1.5fr .8fr;display:none}
+[data-mode="classic"] .preview-lite{display:none}
+[data-mode="classic"] .preview-classic{display:grid}
+
+.preview-panel{padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.preview-panel:not(:last-child){border-right:1px solid var(--border)}
+.preview-panel-label{font-family:var(--font-mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);margin-bottom:.25rem}
+
+/* Fake message bubbles */
+.preview-bubble{padding:.5rem .75rem;border-radius:10px;font-size:.6rem;line-height:1.5;max-width:85%}
+.preview-bubble.customer{background:rgba(255,255,255,.05);color:var(--text-2);border:1px solid var(--border);align-self:flex-start}
+.preview-bubble.agent{background:rgba(0,212,255,.08);color:var(--signal);border:1px solid rgba(0,212,255,.15);align-self:flex-end}
+
+/* Fake chips */
+.preview-chips{display:flex;gap:4px;flex-wrap:wrap}
+.preview-chip{font-family:var(--font-mono);font-size:.5rem;padding:.15rem .4rem;border-radius:4px;border:1px solid var(--border);color:var(--text-3)}
+.preview-chip.active{border-color:rgba(0,212,255,.25);color:var(--signal);background:rgba(0,212,255,.06)}
+.preview-chip.warn{border-color:rgba(251,191,36,.25);color:#fbbf24;background:rgba(251,191,36,.06)}
+.preview-chip.good{border-color:rgba(52,211,153,.25);color:#34d399;background:rgba(52,211,153,.06)}
+
+/* Fake text lines */
+.preview-line{height:4px;border-radius:2px;background:rgba(255,255,255,.04)}
+.preview-line.short{width:60%}
+.preview-line.med{width:80%}
+.preview-line.full{width:100%}
+.preview-line.accent{background:rgba(0,212,255,.12)}
+
+/* Fake bar */
+.preview-bar-meter{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:.25rem}
+.preview-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--signal),var(--mirror))}
+
+/* ===== ENGINE SECTION ===== */
+.engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+.engine-visual{position:relative;display:flex;flex-direction:column;gap:.5rem}
+.engine-node{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:12px;background:var(--glass-bright);font-size:.78rem;transition:all .3s}
+.engine-node:hover{border-color:var(--border-bright)}
+.engine-node-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.engine-node-dot.cyan{background:var(--signal)}
+.engine-node-dot.teal{background:var(--mirror)}
+.engine-node-dot.amber{background:#fbbf24}
+.engine-node-dot.rose{background:#f43f5e}
+.engine-node-dot.green{background:#34d399}
+.engine-node-label{flex:1;color:var(--text-2)}
+.engine-node-val{font-family:var(--font-mono);font-size:.65rem;color:var(--signal)}
+.engine-connector{width:1px;height:16px;background:var(--border);margin-left:1.25rem}
+
+/* ===== CTA SECTION ===== */
+.cta-section{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:5rem 2rem;text-align:center}
+.cta-box{border:1px solid var(--border);border-radius:24px;background:var(--glass-bright);backdrop-filter:blur(12px);padding:3.5rem 2rem;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,212,255,.08),transparent 60%);pointer-events:none}
+.cta-title{font-family:var(--font-display);font-size:clamp(1.3rem,2.5vw,1.7rem);font-weight:700;margin-bottom:.75rem;position:relative}
+.cta-text{font-size:.9rem;color:var(--text-2);max-width:420px;margin:0 auto 2rem;line-height:1.65;position:relative}
+.cta-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* ===== FOOTER ===== */
+.footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;color:var(--text-3);max-width:var(--max-w);margin:0 auto}
+.footer a{color:var(--text-3);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--signal)}
+.footer-brand{font-family:var(--font-display);font-weight:600}
+.footer-brand span{color:var(--signal)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero{padding:6rem 1.25rem 4rem;min-height:auto}
+  .features{grid-template-columns:1fr}
+  .engine-grid{grid-template-columns:1fr}
+  .preview-lite,.preview-classic{grid-template-columns:1fr}
+  .preview-panel:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+  .section{padding:3rem 1.25rem}
+  .hero-actions{flex-direction:column;align-items:center}
+  .nav{padding:.75rem 1.25rem}
+  .cta-box{padding:2.5rem 1.5rem}
+}
+@media(max-width:480px){
+  .mode-btn{padding:.55rem 1.25rem;font-size:.78rem}
+}
+  </style>
+</head>
+<body>
+
+<div class="mirror-line" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-left">
+    <a href="https://sel.theguide.club" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Hub
+    </a>
+    <div class="nav-brand">Mirror<span>Flow</span></div>
+  </div>
+  <div class="nav-right">
+    <a href="https://sel.theguide.club/sync" class="nav-launch" style="background:none;border:1px solid var(--border);color:var(--text-2)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Sync
+    </a>
+    <a id="launchBtn" href="https://mirrorflowlite.theguide.club" class="nav-launch">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Launch Lite
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Intelligent Communication Tool</p>
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18"/><path d="M3 12a9 9 0 0 0 9 9"/><path d="M21 12a9 9 0 0 1-9 9"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <h1 class="hero-title">Reflect. Refine. <span class="reflect">Respond.</span></h1>
+    <p class="hero-sub">MirrorFlow is an intelligent coaching tool that helps call centre agents write better, faster, and with more empathy. Real-time intelligence that mirrors your communication back — so you can see what the customer sees.</p>
+    <div class="hero-actions">
+      <a href="https://mirrorflowlite.theguide.club" class="hero-btn primary" id="heroLaunchLite">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Launch Lite
+      </a>
+      <a href="https://mirrorflowclassic.theguide.club" class="hero-btn ghost" id="heroLaunchClassic">
+        <svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+        Launch Classic
+      </a>
+      <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="hero-btn ghost">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        See Features
+      </button>
+    </div>
+  </div>
+  <div class="hero-scroll"><span></span></div>
+</section>
+
+<!-- MODE TOGGLE -->
+<div class="mode-section" id="features">
+  <div class="mode-bar">
+    <div class="mode-slider"></div>
+    <button class="mode-btn active" data-mode="lite" id="modeLite">Lite</button>
+    <button class="mode-btn" data-mode="classic" id="modeClassic">Classic</button>
+  </div>
+</div>
+
+<!-- WHAT IT DOES -->
+<section class="section">
+  <p class="section-eyebrow" id="liteEyebrow">MirrorFlow Lite</p>
+  <h2 class="section-title" id="sectionTitle">Clean coaching. Instant clarity.</h2>
+  <p class="section-sub" id="sectionSub">A streamlined tri-panel workspace that gives agents everything they need — customer context, a smart drafting editor, and live coaching insights — without the noise.</p>
+
+  <div class="features" id="featureGrid">
+    <!-- LITE FEATURES -->
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <p class="fcard-title">Phone Panel</p>
+      <p class="fcard-text">Live conversation view with customer and agent message bubbles. Context at a glance — see the full thread as it unfolds.</p>
+      <span class="fcard-chip">Tri-panel layout</span>
+    </div>
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      <p class="fcard-title">Smart Draft Editor</p>
+      <p class="fcard-text">Compose responses with real-time feedback. Focus mode expands the editor full-width for longer drafts. Agent and customer blocks side by side.</p>
+      <span class="fcard-chip">Focus mode</span>
+    </div>
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+      <p class="fcard-title">Insights Panel</p>
+      <p class="fcard-text">Three tabs — Experience, Agent, and Compose — surface customer emotion, writing health, tone coaching, and gap-fix suggestions in real time.</p>
+      <span class="fcard-chip">3 insight tabs</span>
+    </div>
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
+      <p class="fcard-title">Coverage Bar</p>
+      <p class="fcard-text">Tracks which customer concerns you've addressed and which you haven't. Engine-aware — updates live as you type your response.</p>
+      <span class="fcard-chip">Engine-aware</span>
+    </div>
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+      <p class="fcard-title">Utilities Hub</p>
+      <p class="fcard-text">Quick-access toolbar pinned at the bottom of insights. Undo/redo, alignment tools, and a collapsible tools tray for advanced features.</p>
+      <span class="fcard-chip">Quick access</span>
+    </div>
+    <div class="fcard" data-mode="lite">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <p class="fcard-title">Responsive Layout</p>
+      <p class="fcard-text">Adapts across screen sizes. On smaller viewports, panels stack and focus modes let you toggle between phone, editor, and insights.</p>
+      <span class="fcard-chip">Adaptive</span>
+    </div>
+
+    <!-- CLASSIC FEATURES -->
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+      <p class="fcard-title">Intelligence Engine v2</p>
+      <p class="fcard-text">Full intent family system with 10 families, weighted scoring (keyword×3, variant×2, contextual×2, anchor×1), proximity and diversity bonuses.</p>
+      <span class="fcard-chip">10 intent families</span>
+    </div>
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <p class="fcard-title">Agent Intent Detection</p>
+      <p class="fcard-text">Pattern-based intent matching with everyday language support. Detects greetings, empathy, explanations, timelines, apologies, and close signals.</p>
+      <span class="fcard-chip">27 lock upgrades</span>
+    </div>
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+      <p class="fcard-title">Gap Detection</p>
+      <p class="fcard-text">11 structural gap rules with severity grading. Catches missing closers, uncovered complaints, tone risks like overpromising, defensive language, and aggression.</p>
+      <span class="fcard-chip">11 gap rules</span>
+    </div>
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+      <p class="fcard-title">Emotion Layer</p>
+      <p class="fcard-text">Detects 6 emotions with intensity and persistence scoring. Frustration, gratitude, confusion, urgency, distress, and resignation — tracked across the conversation.</p>
+      <span class="fcard-chip">6 emotions</span>
+    </div>
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
+      <p class="fcard-title">Coverage Matrix</p>
+      <p class="fcard-text">Bidirectional customer→agent cross-reference. Tracks obligation fulfilment, highlights uncovered concerns, and feeds the coverage bar with engine data.</p>
+      <span class="fcard-chip">Bidirectional</span>
+    </div>
+    <div class="fcard" data-mode="classic">
+      <div class="fcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <p class="fcard-title">Multi-Layout System</p>
+      <p class="fcard-text">Switch between MLCX (full coaching), Notepad (draft-focused), and Dev Lab modes. Brand themes for Hastings, Staysure, and more. Lunar and light modes.</p>
+      <span class="fcard-chip">3 layouts · 6 themes</span>
+    </div>
+  </div>
+</section>
+
+<!-- UI PREVIEW -->
+<section class="preview-section">
+  <p class="section-eyebrow">Interface</p>
+  <h2 class="section-title">A workspace that works with you.</h2>
+  <p class="section-sub" style="margin-bottom:2rem">Three panels, zero friction. The conversation flows left to right — from context, through composition, to coaching.</p>
+
+  <div class="preview-frame">
+    <div class="preview-bar">
+      <div class="preview-dot"></div><div class="preview-dot"></div><div class="preview-dot"></div>
+      <span class="preview-title" id="previewTitle">MirrorFlow Lite</span>
+    </div>
+    <!-- Lite preview -->
+    <div class="preview-body preview-lite">
+      <div class="preview-panel">
+        <div class="preview-panel-label">Phone</div>
+        <div class="preview-bubble customer">Hi, I've been waiting 3 weeks for my claim and nobody has called me back.</div>
+        <div class="preview-bubble agent">I completely understand how frustrating that must be. Let me look into this for you right now.</div>
+        <div class="preview-bubble customer">I just want to know what's happening. Nobody tells me anything.</div>
+      </div>
+      <div class="preview-panel">
+        <div class="preview-panel-label">Draft</div>
+        <div class="preview-line full" style="margin-top:.5rem"></div>
+        <div class="preview-line med"></div>
+        <div class="preview-line full"></div>
+        <div class="preview-line short"></div>
+        <div style="margin-top:auto">
+          <div class="preview-chips">
+            <div class="preview-chip active">Send Ready</div>
+            <div class="preview-chip">76 words</div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-panel">
+        <div class="preview-panel-label">Insights</div>
+        <div class="preview-chips" style="margin-bottom:.5rem"><div class="preview-chip active">Experience</div><div class="preview-chip">Agent</div><div class="preview-chip">Compose</div></div>
+        <div class="preview-chip warn" style="width:fit-content">Frustration detected</div>
+        <div class="preview-chip good" style="margin-top:.35rem;width:fit-content">Empathy acknowledged</div>
+        <div style="margin-top:.75rem"><div class="preview-panel-label">Coverage</div><div class="preview-bar-meter"><div class="preview-bar-fill" style="width:65%"></div></div></div>
+      </div>
+    </div>
+    <!-- Classic preview -->
+    <div class="preview-body preview-classic">
+      <div class="preview-panel">
+        <div class="preview-panel-label">Conversation</div>
+        <div class="preview-bubble customer">I've been told different things by three different people about my refund.</div>
+        <div class="preview-bubble agent">I can see how that would be confusing. Let me pull up the full history and give you one clear answer.</div>
+        <div class="preview-bubble customer">I was also told the policy covers water damage but now you're saying it doesn't?</div>
+        <div class="preview-bubble agent">Let me clarify exactly what your policy does and doesn't cover for water-related incidents.</div>
+      </div>
+      <div class="preview-panel">
+        <div class="preview-panel-label">Intelligence Engine</div>
+        <div class="preview-chips" style="margin-bottom:.5rem">
+          <div class="preview-chip active">Empathy</div><div class="preview-chip active">Explain</div><div class="preview-chip">Timeline</div><div class="preview-chip warn">Close ✗</div>
+        </div>
+        <div class="preview-chip warn" style="width:fit-content;margin-bottom:.35rem">GAP: Missing closer</div>
+        <div class="preview-chip good" style="width:fit-content;margin-bottom:.35rem">Intent: Fact Confirm ✓</div>
+        <div style="margin-top:.5rem"><div class="preview-panel-label">Emotion</div>
+          <div class="preview-chips"><div class="preview-chip warn">Frustration 0.8</div><div class="preview-chip">Confusion 0.6</div></div>
+        </div>
+        <div style="margin-top:.5rem"><div class="preview-panel-label">Coverage</div><div class="preview-bar-meter"><div class="preview-bar-fill" style="width:82%"></div></div></div>
+      </div>
+      <div class="preview-panel">
+        <div class="preview-panel-label">Agent Audit</div>
+        <div class="preview-chip good" style="width:fit-content;margin-bottom:.35rem">Grammar ✓</div>
+        <div class="preview-chip good" style="width:fit-content;margin-bottom:.35rem">Tone ✓</div>
+        <div class="preview-chip warn" style="width:fit-content;margin-bottom:.35rem">Vague timeline</div>
+        <div class="preview-line accent" style="margin-top:.75rem"></div>
+        <div class="preview-line short" style="margin-top:.25rem"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGINE -->
+<section class="section">
+  <div class="engine-grid">
+    <div>
+      <p class="section-eyebrow">Under the hood</p>
+      <h2 class="section-title">The MirrorFlow Engine</h2>
+      <p class="section-sub">A real-time analysis pipeline that processes every message as you type. No API calls, no latency, no data leaves the browser. Everything runs locally in a single HTML file.</p>
+      <p style="font-size:.82rem;color:var(--text-2);line-height:1.65">The engine detects customer intent, scores emotional signals, maps agent response coverage against customer concerns, identifies structural gaps, and surfaces coaching suggestions — all within milliseconds of each keystroke. Phase F scheduling ensures heavy analysis runs efficiently without blocking the UI.</p>
+    </div>
+    <div class="engine-visual">
+      <div class="engine-node"><div class="engine-node-dot cyan"></div><span class="engine-node-label">Customer message parsed</span><span class="engine-node-val">→ intents</span></div>
+      <div class="engine-connector"></div>
+      <div class="engine-node"><div class="engine-node-dot teal"></div><span class="engine-node-label">Emotion layer scored</span><span class="engine-node-val">6 signals</span></div>
+      <div class="engine-connector"></div>
+      <div class="engine-node"><div class="engine-node-dot amber"></div><span class="engine-node-label">Coverage matrix built</span><span class="engine-node-val">bi-dir</span></div>
+      <div class="engine-connector"></div>
+      <div class="engine-node"><div class="engine-node-dot rose"></div><span class="engine-node-label">Gap detection fired</span><span class="engine-node-val">11 rules</span></div>
+      <div class="engine-connector"></div>
+      <div class="engine-node"><div class="engine-node-dot green"></div><span class="engine-node-label">Coaching surfaced</span><span class="engine-node-val">real-time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <p class="section-eyebrow">Ready?</p>
+    <h2 class="cta-title">Start coaching in seconds.</h2>
+    <p class="cta-text">No installation. No login. No data leaves your browser. Open MirrorFlow and start writing better responses immediately.</p>
+    <div class="cta-actions">
+      <a href="https://mirrorflowlite.theguide.club" class="hero-btn primary" id="ctaLite">Launch Lite</a>
+      <a href="https://mirrorflowclassic.theguide.club" class="hero-btn ghost" id="ctaClassic">Launch Classic</a>
+      <a href="https://sel.theguide.club" class="hero-btn ghost">← Back to Hub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">Mirror<span>Flow</span></div>
+  <div>Part of <a href="https://sel.theguide.club">theguide.club</a></div>
+  <div>© 2026</div>
+</footer>
+
+<script>
+// MODE TOGGLE
+const html = document.documentElement;
+const liteBtn = document.getElementById('modeLite');
+const classicBtn = document.getElementById('modeClassic');
+const sectionTitle = document.getElementById('sectionTitle');
+const sectionSub = document.getElementById('sectionSub');
+const liteEyebrow = document.getElementById('liteEyebrow');
+const previewTitle = document.getElementById('previewTitle');
+const launchBtn = document.getElementById('launchBtn');
+
+const content = {
+  lite: {
+    eyebrow: 'MirrorFlow Lite',
+    title: 'Clean coaching. Instant clarity.',
+    sub: 'A streamlined tri-panel workspace that gives agents everything they need — customer context, a smart drafting editor, and live coaching insights — without the noise.',
+    preview: 'MirrorFlow Lite',
+    launchText: 'Launch Lite',
+    launchHref: 'https://mirrorflowlite.theguide.club'
+  },
+  classic: {
+    eyebrow: 'MirrorFlow Classic',
+    title: 'Full engine. Deep intelligence.',
+    sub: 'The complete coaching platform with the Intelligence Engine v2, 10 intent families, emotion detection, gap analysis, multi-layout system, and brand theming. Built for power users.',
+    preview: 'MirrorFlow Classic — MLCX Layout',
+    launchText: 'Launch Classic',
+    launchHref: 'https://mirrorflowclassic.theguide.club'
+  }
+};
+
+function setMode(mode) {
+  html.setAttribute('data-mode', mode);
+  const c = content[mode];
+  liteEyebrow.textContent = c.eyebrow;
+  sectionTitle.textContent = c.title;
+  sectionSub.textContent = c.sub;
+  previewTitle.textContent = c.preview;
+  launchBtn.textContent = c.launchText;
+  launchBtn.href = c.launchHref;
+
+  // Update hero launch buttons highlight
+  document.getElementById('heroLaunchLite').classList.toggle('primary', mode === 'lite');
+  document.getElementById('heroLaunchLite').classList.toggle('ghost', mode !== 'lite');
+  document.getElementById('heroLaunchClassic').classList.toggle('primary', mode === 'classic');
+  document.getElementById('heroLaunchClassic').classList.toggle('ghost', mode !== 'classic');
+
+  // Toggle btn active
+  liteBtn.classList.toggle('active', mode === 'lite');
+  classicBtn.classList.toggle('active', mode === 'classic');
+}
+
+liteBtn.addEventListener('click', () => setMode('lite'));
+classicBtn.addEventListener('click', () => setMode('classic'));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
